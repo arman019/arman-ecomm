@@ -47,9 +47,10 @@ const userSchema = new mongoose.Schema({
 //virtual field 
 
 userSchema.virtual('password')
-.set(function(passowrd){
-    this._password = passowrd,
+.set(function(password){
+    this._password = password,
     this.salt=uuidv1();
+   
     this.hashed_password= this.encryptPassword(password);
 })
 
@@ -58,18 +59,15 @@ userSchema.virtual('password')
 })
 
 userSchema.methods={
-    encryptPassword: function(password){
-        if(!password){
+    encryptPassword: function(password) {
+        if (!password) return '';
+        try {
+            return crypto
+                .createHmac('sha1', this.salt)
+                .update(password)
+                .digest('hex');
+        } catch (err) {
             return '';
-        }
-
-        try{
-            return crypto.createHmac('sh1',this.salt)
-                                    .update(password)
-                                    .digest('hex')
-        }
-        catch(err){
-            return "";
         }
     }
 };

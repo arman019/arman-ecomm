@@ -5,6 +5,8 @@ const dotenv = require('dotenv').config();
 const bodyparser = require('body-parser');
 const cookieparser = require('cookie-parser');
 const morgan = require('morgan');
+const expressValidator = require('express-validator');
+ 
 
 
 
@@ -25,6 +27,7 @@ mongoose.connect(process.env.DATABASE,{
 app.use(morgan('dev'));
 app.use(bodyparser.json());
 app.use(cookieparser());
+app.use(expressValidator());
 
 
 app.get('/',(req,res)=>{

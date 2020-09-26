@@ -14,7 +14,7 @@ exports.signup=(req,res)=>{
     .catch((err)=>{
 
         return res.status(400).json({
-           message: errorHandler(err)
+        message: errorHandler(err)
         })
     })
 }

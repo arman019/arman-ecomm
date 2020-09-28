@@ -22,27 +22,39 @@ exports.signup=(req,res)=>{
 };
 
 
-exports.signin= (req,res)=>{
+exports.signin= (req,res)=>{  
     const {email,password}=req.body;
     User.findOne({email}, (err,user)=>{
         if(err || !user){
             res.status(400).json({
                 err:"Email doesnt exsist , please signup"
             });
-        }
-
+        }      
+        
         if(!user.authenticate(password)){
             return res.status(401).json({
-                error: 'Email and password dont match'
+                email:user.email,
+                error: 'Password doesnt match'
             });
         }
 
         const token = jwt.sign({_id:user._id}, process.env.JWT_SECRET)
         res.cookie('t', {expire: new Date()+9999})
 
-        const {_id,name,email,role}=user;
-        return res.json({token:token},{user:{_id,name,email,role}});
+        const { _id, name, email, role } = user;
+        return res.json({ token:token, user: { _id, email, name, role } });
 
     })
 
+};
+
+exports.signout =(req,res,next)=>{
+
+    res.clearCookie('t')
+
+    res.json({
+        message:"user signout"
+    })
+    
+    
 }

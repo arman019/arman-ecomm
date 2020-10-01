@@ -86,4 +86,34 @@ exports.read = (req,res)=>
     res.status(200).json({
         product:req.product
     })
+};
+
+exports.remove = (req,res)=>{
+    let product = req.product
+    product.remove((err,deletedProduct)=>{
+        if(err){
+            return res.status(400).json({
+                error:errorHandler(err)
+            });
+        }
+        res.json({
+         
+            message:"product has been deleted" 
+        })
+
+        product.save((err,resp)=>{
+            if(err){
+                return res.status(400).json({
+                    error:errorHandler(err),
+                    message:"cant delete product"
+                });
+            }
+
+            res.json({              
+                message:"process succesfull" 
+            })
+            
+            
+        })
+    })
 }

@@ -6,13 +6,12 @@ const bodyparser = require('body-parser');
 const cookieparser = require('cookie-parser');
 const morgan = require('morgan');
 const expressValidator = require('express-validator');
- 
-
 
 
 const authRoutes=require('./routes/auth');
 const userRoutes=require('./routes/user');
 const categoryRoutes = require('./routes/category');
+const productRoutes = require('./routes/product');
 
 mongoose.connect(process.env.DATABASE,{
     useNewUrlParser:true,
@@ -39,6 +38,9 @@ app.get('/',(req,res)=>{
 app.use('/api',authRoutes);
 app.use('/api',userRoutes);
 app.use('/api',categoryRoutes);
+app.use('/api',productRoutes);
+
+
 
 
 const port = process.env.PORT || 8000;

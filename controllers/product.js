@@ -63,4 +63,27 @@ exports.create = (req,res,next)=>{
 
     })
 
+};
+
+
+exports.productById= (req,res,next,id)=>{
+    Product.findById(id).exec((err,product)=>{
+        if(err || !product){
+            return res.status(400).json({
+                error:"product not found"
+            })
+        }
+
+        req.product=product;
+        next();
+    });
+
+};
+
+exports.read = (req,res)=>
+   {
+    req.product.photo= undefined
+    res.status(200).json({
+        product:req.product
+    })
 }

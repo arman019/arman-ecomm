@@ -80,8 +80,7 @@ exports.productById= (req,res,next,id)=>{
 
 };
 
-exports.read = (req,res)=>
-   {
+exports.read = (req,res)=>  {
     req.product.photo= undefined
     res.status(200).json({
         product:req.product

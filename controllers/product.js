@@ -1,5 +1,5 @@
 const formidable = require('formidable');
-//const loadash = require('loadash');
+const _ = require('lodash');
 const fs = require('fs');
 
 const Product = require('../models/product');
@@ -96,8 +96,7 @@ exports.remove = (req,res)=>{
                 error:errorHandler(err)
             });
         }
-        res.json({
-         
+        res.json({        
             message:"product has been deleted" 
         })
 
@@ -115,5 +114,60 @@ exports.remove = (req,res)=>{
             
             
         })
-    })
-}
+    });
+};
+
+
+exports.update = (req, res) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, (err, fields, files) => {
+        
+        if(err){
+            return res.status(400).json({
+                error:"Image couldnot be uploaded"
+            })
+    
+            }
+            
+            const { name, description, price, category, quantity, shipping } = fields;
+    
+            if (!name || !description || !price || !category || !quantity || !shipping) {
+                return res.status(400).json({
+                    error: 'All fields are required'
+                });
+            }
+        
+
+        let product = req.product;
+        product = _.extend(product, fields);
+        var checkExtension = files.photo.type.split("/")[1];      
+        
+        if(!checkExtension.match('jpe'||'jpg'||'png'||'bmp'||'jpeg')){
+            //console.log(checkExtension)
+            return res.status(400).json({
+                error: 'extension should be jpe||jpg||png||bmp||jpeg'
+            });
+        }
+
+
+        if (files.photo) {
+            if (files.photo.size > 1000000) {
+                return res.status(400).json({
+                    error: 'Image should be less than 1mb in size'
+                });
+            }
+            product.photo.data = fs.readFileSync(files.photo.path);
+            product.photo.contentType = files.photo.type;
+        }
+
+        product.save((err, result) => {
+            if (err) {
+                return res.status(400).json({
+                    error: errorHandler(err)
+                });
+            }
+            res.json(result);
+        });
+    });
+};

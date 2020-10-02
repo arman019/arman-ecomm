@@ -225,5 +225,20 @@ exports.listRelated=(req,res,next)=>{
         }
 
         res.status(200).json(products);
+    });
+};
+
+exports.listCategories= (req,res)=>{
+    Product.distinct("category",{},(err,categories)=>{
+        res.setHeader('Content-Type','application/json');
+        if(err){
+            return res.status(400).json({
+                error: errorHandler(err),
+                message:'category not found'
+            });
+        }
+
+        res.status(200).json(categories);
     })
+
 }

@@ -22,7 +22,7 @@ exports.signup=(req,res)=>{
     })
 };
 
-
+/*
 exports.signin= (req,res)=>{  
     const {email,password}=req.body;
     User.findOne({email}, (err,user)=>{
@@ -32,12 +32,11 @@ exports.signin= (req,res)=>{
             });
         }      
         
-        if(!user.authenticate(password)){
-            return res.status(401).json({
-                email:user.email,
-                error: 'Password doesnt match'
-            });
-        }
+        // if(user &&!user.authenticate(password) || !user && user.authenticate(password)){
+        //     return res.status(401).json({
+        //         error: 'Email or Password doesnt match'
+        //     });
+        // }
 
         const token = jwt.sign({_id:user._id}, process.env.JWT_SECRET)
         res.cookie('t', {expire: new Date()+9999})
@@ -47,6 +46,31 @@ exports.signin= (req,res)=>{
 
     })
 
+};
+*/
+
+exports.signin = (req, res) => {
+    // find the user based on email
+    const { email, password } = req.body;
+    User.findOne({ email }, (err, user) => {
+        if (err || !user) {
+            return res.status(400).json({
+                error: 'User with that email does not exist. Please signup'
+            });
+        }
+        if (!user.authenticate(password)) {
+            return res.status(401).json({
+                error: 'Email and password dont match'
+            });
+        }
+    
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+        
+        res.cookie('t', token, { expire: new Date() + 9999 });
+
+        const { _id, name, email, role } = user;
+        return res.json({ token, user: { _id, email, name, role } });
+    });
 };
 
 exports.signout =(req,res,next)=>{

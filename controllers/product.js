@@ -27,19 +27,33 @@ exports.create = (req,res,next)=>{
 
         let product = new Product(fields);
         // files.photo.contentType.matches(/\.(jpe?g|png|gif|bmp)$/i)
-       console.log(files.photo.type)
-        var checkExtension = files.photo.type.split('/')[1];    
+       //console.log(files.photo.type)
+      
         
         // if(checkExtension.trim() ===('jpe'||'jpg'||'png'||'bmp'||'jpeg'||'JPE'||'JPG'||'PNG'||'BMP'||'JPEG')){
-            if(!checkExtension.match('png') && !checkExtension.match('jpeg')  && !checkExtension.match('bmp')  && !checkExtension.match('jpg')){
+        if(files.photo){
+            var checkExtension = files.photo.type.split('/')[1];
 
-            console.log(checkExtension.trim().toLowerCase() )
+            if(!checkExtension.match('png') && !checkExtension.match('jpeg')  
+            && !checkExtension.match('bmp')  && !checkExtension.match('jpg')){
+
+           // console.log(checkExtension.trim().toLowerCase() )
+                return res.status(400).json({
+                    
+                    error: 'extension should be jpe || jpg || png || bmp || jpeg'
+                });
+        
+            }
+        }
+        else{
             return res.status(400).json({
-                
-                error: 'extension should be jpe||jpg||png||bmp||jpeg'
+                error: 'Image should be added'
             });
         }
+            
 
+            
+           
         if(files.photo){
 
             if (files.photo.size > 1000000) {
@@ -143,13 +157,24 @@ exports.update = (req, res) => {
 
         let product = req.product;
         product = _.extend(product, fields);
-        var checkExtension = files.photo.type.split('/')[1];     
-        
-        if(!checkExtension.match('png') && !checkExtension.match('jpeg')  && !checkExtension.match('bmp')  && !checkExtension.match('jpg')){
 
-            //console.log(checkExtension)
+        if(files.photo){
+            var checkExtension = files.photo.type.split('/')[1];
+
+            if(!checkExtension.match('png') && !checkExtension.match('jpeg')  
+            && !checkExtension.match('bmp')  && !checkExtension.match('jpg')){
+
+           // console.log(checkExtension.trim().toLowerCase() )
+                return res.status(400).json({
+                    
+                    error: 'extension should be jpe || jpg || png || bmp || jpeg'
+                });
+        
+            }
+        }
+        else{
             return res.status(400).json({
-                error: 'extension should be jpe||jpg||png||bmp||jpeg'
+                error: 'Image is not enslisted'
             });
         }
 

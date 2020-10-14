@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const Product = require('../models/product');
 const { errorHandler } = require('../helpers/dbErrorHandler');
+const product = require('../models/product');
 
 exports.create = (req,res,next)=>{
     let form = new formidable.IncomingForm();
@@ -318,7 +319,7 @@ exports.listBySearch = (req, res) => {
         .exec((err, data) => {
             if (err) {
                 return res.status(400).json({
-                    error: "Products not found"
+                    error: err
                 });
             }
             res.json({
@@ -336,3 +337,29 @@ exports.photo = (req, res, next) => {
     }
     next();
 };
+
+
+exports.listSearch = (req,res) =>{
+    //creatinga query to hold the search value and category valyue
+
+    const query = {}
+     if(req.query.search){
+         query.name= {$regex: req.query.search , $options:'i'} //in mongoose we can use regex to match pattern and option here is for case insensitive
+        if(req.query.category &&req.query.category !== 'ALL'){
+            query.category = req.query.category
+        }
+
+        //ekhon ami query use kore valu pabo search and category basis a
+
+        Product.find(query, (error , product)=>{
+            if(error){
+                return res.status(400).json({
+                    error:errorHandler(error)
+                });
+            }
+            res.json(product)
+        }).select('-photo') //avoiding photo in search
+
+
+     } 
+}

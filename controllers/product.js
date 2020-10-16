@@ -100,9 +100,9 @@ exports.productById= (req,res,next,id)=>{
 
 exports.read = (req,res)=>  {
     req.product.photo= undefined
-    res.status(200).json({
-        product:req.product
-    })
+    res.status(200).json(
+        req.product
+    )
 };
 
 exports.remove = (req,res)=>{

@@ -18,7 +18,8 @@ exports.categoryById=(req,res,next,id)=>{
     Category.findById(id).exec((err,category)=>{
         if (err || !category) {
             return res.status(400).json({
-                message:"category doesnt exsists"
+                message:"category doesnt exsists",
+                error:err
             });
         }
 
@@ -36,8 +37,8 @@ exports.read= (req,res,next)=>{
 
 
 exports.update = (req, res) => {
-    console.log('req.body', req.body);
-    console.log('category update param', req.params.categoryById);
+    // console.log('req.body', req.body);
+    // console.log('category update param', req.params.categoryById);
     res.setHeader('Content-Type','application/json');
 
     const category = req.category;

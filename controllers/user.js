@@ -1,14 +1,14 @@
-const User = require ('../models/user');
+const User = require('../models/user');
 
-exports.userById=(req,res,next,id)=>{
-    User.findById(id).exec((err,user)=>{
-        if(err||!user){
+exports.userById = (req, res, next, id) => {
+    User.findById(id).exec((err, user) => {
+        if (err || !user) {
             return res.status(400).json({
-                error:err
+                error: err
             })
         }
 
-        req.profile= user;
+        req.profile = user;
         next();
     })
 };
@@ -65,3 +65,31 @@ exports.update = (req, res) => {
         });
     });
 };
+
+
+exports.addOrderToUserHistory = (req, res, next) => {
+
+    const history = [];
+  //  console.log("req order", req.body.order)
+
+    req.body.order.products.forEach((item) => {
+        history.push({
+            _id: item._id,
+            name: item.name,
+            description: item.description,
+            category: item.category,
+            quantity: item.count,
+            transaction_id: req.body.order.transaction_id,
+            amount: req.body.order.amount
+        });
+    });
+
+    User.findOneAndUpdate({ _id: req.profile._id }, { $push: { history: history } }, { new: true }, (error, data) => {
+        if (error) {
+            return res.status(400).json({
+                error: 'Could not update user purchase history'
+            });
+        }
+        next();
+    });
+}

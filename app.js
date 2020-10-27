@@ -19,7 +19,8 @@ const orderRoutes = require('./routes/order');
 mongoose.connect(process.env.DATABASE,{
     useNewUrlParser:true,
     useCreateIndex:true,
-    useUnifiedTopology:true  
+    useUnifiedTopology:true,
+     useFindAndModify: false 
 })
 .then(()=>{
     console.log('data base connected')

@@ -63,7 +63,7 @@ exports.getStatusValues = (req,res)=>{
 
 exports.updateOrderStatus = (req,res)=>{
     Order.update({_id: req.body.orderId}, {$set:{status: req.body.status}} , (error,order)=>{
-        if (err) {
+        if (error) {
             return res.status(400).json({
                 error: errorHandler(error)
             });
